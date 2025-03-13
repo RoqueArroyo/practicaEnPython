@@ -1,24 +1,32 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Define the transformations (affine maps) for the Sierpiński Triangle
-transformations = [
-    lambda x, y: (0.5 * x, 0.5 * y),  # Bottom-left transformation
-    lambda x, y: (0.5 * x + 0.5, 0.5 * y),  # Bottom-right transformation
-    lambda x, y: (0.5 * x + 0.25, 0.5 * y + 0.5)  # Top transformation
-]
+numits = 20 
+a = 0
+b = 0
+c = 1
+d = 1
+M = 100 
+R = 200 
 
-def escape_time(x, y, max_iter=50):
-    """
-    Determines the escape time for a point (x, y).
-    The escape condition is based on how close it remains to the transformations.
-    """
-    for i in range(max_iter):
-        prev_x, prev_y = x, y
-        x, y = transformations[np.random.randint(0, 3)](x, y)
-        if abs(x - prev_x) < 1e-5 and abs(y - prev_y) < 1e-5:
-            return i
-    return max_iter  # If max iterations reached, assign max color
+for p in range(1,M+1):
+    for q in range(1,M+1):
+        x = a + (c-a)*p/M
+        y = b + (d-b)*p/M
+        for n in range(1,numits+1):
+            if y > 0.5:
+                x = 2*x
+                y = 2*y-1
+            elif x > 0.5: 
+                x = 2*x-1
+                y = 2*y
+            else:
+                x = 2*x
+                y = 2*y
+            
+            if x*x + y*y > R:
+                plt.plot(x,y)
+
 
 # Define image resolution
 width, height = 500, 500
@@ -37,5 +45,5 @@ for i in range(width):
 # Plot the escape time fractal
 plt.imshow(image, cmap="inferno", extent=[x_min, x_max, y_min, y_max])
 plt.colorbar(label="Escape Time")
-plt.title("Escape Time Algorithm - Sierpiński Triangle")
+plt.title("Escape Time Algorithm - Sierpinski Triangle")
 plt.show()
